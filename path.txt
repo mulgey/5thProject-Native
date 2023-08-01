@@ -1,0 +1,6 @@
+1) npx create-expo-app 5thProject-Native // cd 5thProject-Native // git init // git add . // git commit -m "Initial commit"
+2) created screens
+3) setup navigation " npm install @react-navigation/native " // " npx expo install react-native-screens react-native-safe-area-context " // " npm install @react-navigation/native-stack " // " npm install @react-navigation/bottom-tabs "
+4) add navigation to app.js
+5) styling navigation (with the help of constants/style.js) for colors, header and icons (Ionicans)
+6) start adding content & key components. try splitting the contents into components as much as possible
