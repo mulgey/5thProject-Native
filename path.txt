@@ -4,3 +4,8 @@
 4) add navigation to app.js
 5) styling navigation (with the help of constants/style.js) for colors, header and icons (Ionicans)
 6) start adding content & key components. try splitting the contents into components as much as possible
+7) component'leri birbirine gerekli verileri aktaracak şekilde mantığını kurduk ve prop'ları bu mantığa göre yerleştirdik
+8) verinin düzgün çalıştığını gözlemlemek için dummy_data (test verisi) oluşturduk ve çarkları çevirdik
+9) ilk marşı verdiğimize göre, styling i biraz daha detaylandırabiliriz
+10) components içerisindeki item'ları oluştururuz. gerekli object destructring'leri sağlarız ve styling'i yaparız (FlatList itemları Pressable olarak ayrı comp. örneğin)
+11) 

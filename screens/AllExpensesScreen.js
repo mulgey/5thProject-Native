@@ -1,9 +1,18 @@
-import { View, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
+
+// components
+import ExpensesOutput from "../components/ExpensesOutput/ExpensesOutput";
 
 export default function AllExpensesScreen() {
   return (
-    <View>
-      <Text>AllExpensesScreen</Text>
+    <View style={styles.container}>
+      <ExpensesOutput expensePeriyodu="Hepsi" />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
