@@ -37,6 +37,24 @@ const SANAL_VERI_YIGINI = [
     amount: 29.99,
     date: new Date("2022-02-18"),
   },
+  {
+    id: "e6",
+    description: "A new laptop",
+    amount: 1059.5,
+    date: new Date("2022-02-28"),
+  },
+  {
+    id: "e7",
+    description: "Gift for the boyz",
+    amount: 120.554,
+    date: new Date("2022-04-02"),
+  },
+  {
+    id: "e8",
+    description: "Ring for my wife",
+    amount: 1220.5,
+    date: new Date("2022-04-02"),
+  },
 ];
 
 export default function ExpensesOutput({ harcamalar, expensePeriyodu }) {

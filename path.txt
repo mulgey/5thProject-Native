@@ -8,4 +8,5 @@
 8) verinin düzgün çalıştığını gözlemlemek için dummy_data (test verisi) oluşturduk ve çarkları çevirdik
 9) ilk marşı verdiğimize göre, styling i biraz daha detaylandırabiliriz
 10) components içerisindeki item'ları oluştururuz. gerekli object destructring'leri sağlarız ve styling'i yaparız (FlatList itemları Pressable olarak ayrı comp. örneğin)
-11) 
+11) tarihi yönetmek için util/date.js içerisinde fonksiyonu oluşturduk
+12)
