@@ -1,5 +1,5 @@
 1) npx create-expo-app 5thProject-Native // cd 5thProject-Native // git init // git add . // git commit -m "Initial commit"
-2) created screens
+2) create screens
 3) setup navigation " npm install @react-navigation/native " // " npx expo install react-native-screens react-native-safe-area-context " // " npm install @react-navigation/native-stack " // " npm install @react-navigation/bottom-tabs "
 4) add navigation to app.js
 5) styling navigation (with the help of constants/style.js) for colors, header and icons (Ionicans)
@@ -9,4 +9,4 @@
 9) ilk marşı verdiğimize göre, styling i biraz daha detaylandırabiliriz
 10) components içerisindeki item'ları oluştururuz. gerekli object destructring'leri sağlarız ve styling'i yaparız (FlatList itemları Pressable olarak ayrı comp. örneğin)
 11) tarihi yönetmek için util/date.js içerisinde fonksiyonu oluşturduk
-12)
+12) Muhtelif içerik eklemeleri devam

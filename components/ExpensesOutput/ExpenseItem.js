@@ -1,12 +1,24 @@
 import { View, StyleSheet, Pressable, Text } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 // constants & utilities
 import { GlobalStyles } from "../../constants/styles";
 import { tarihiFormatla } from "../../utilities/date";
 
 export default function ExpenseItem({ description, date, amount }) {
+  // bu sayfa birden fazla screen'de kullanılıyor
+  // o yüzden screen'den buraya paslamak yerine navigation'ı kendimiz import'ladık direkt
+  const navigation = useNavigation();
+
+  function expensePressFunction() {
+    navigation.navigate("ManageExpenses");
+  }
+
   return (
-    <Pressable>
+    <Pressable
+      onPress={expensePressFunction}
+      style={({ pressed }) => pressed && styles.pressed}
+    >
       <View style={styles.expenseItem}>
         <View>
           <Text style={[styles.textBase, styles.descriptionText]}>
@@ -57,5 +69,8 @@ const styles = StyleSheet.create({
   amountText: {
     color: GlobalStyles.colors.primary500,
     fontWeight: "bold",
+  },
+  pressed: {
+    opacity: 0.75,
   },
 });
