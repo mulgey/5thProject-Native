@@ -11,4 +11,4 @@
 11) tarihi yönetmek için util/date.js içerisinde fonksiyonu oluşturduk
 12) Muhtelif içerik eklemeleri, style düzenlemeleri ve içeriği component'lere bölerek düzenlemeye devam
 13) İşlevsellik belirli bir boyuta ulaştığı için "dummy_data (test verisi)"ni context olarak app-wide sunmaya başladık (expenses-context.js)
-14) 
+14) context'i tamamladıktan sonra app-wide olarak sunup işlevlerini (tuşlara) tanımladık

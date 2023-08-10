@@ -1,5 +1,8 @@
-import { useLayoutEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { useContext, useLayoutEffect } from "react";
+import { View, StyleSheet } from "react-native";
+
+// context provider
+import { ExpensesContext } from "../store/expenses-context";
 
 // components & constants
 import IconButton from "../components/UserInterface/IconButton";
@@ -8,6 +11,9 @@ import { GlobalStyles } from "../constants/styles";
 
 // screen içerinde default olan "route" ve "navigation"ı kullandık
 export default function ManageExpenseScreen({ route, navigation }) {
+  // context üzerinden verilere ulaşalım. createContext'teki ismi kullanmalıyız
+  const expenseCtx = useContext(ExpensesContext);
+
   // parameter extract'leme zamanı. Soru işareti ekledik çünkü
   // route.params ya da harcamaIDsi özelliği yoksa, kod hata vermez, sadece editedID değişkeni undefined olur.
   // "harcamaIDsi" ExpenseItem.js'ten buraya navigate'lenirken içerik olarak paslandı
@@ -26,6 +32,7 @@ export default function ManageExpenseScreen({ route, navigation }) {
   function trashPressFonksiyonu() {
     // first it should be closed
     navigation.goBack();
+    expenseCtx.deleteExpense(checkID);
   }
 
   function cancelFonksiyonu() {
@@ -36,6 +43,23 @@ export default function ManageExpenseScreen({ route, navigation }) {
   function guncelleEkleFonksiyonu() {
     // first it should be closed
     navigation.goBack();
+    // id var mı? varsa bu bir update girişimi
+    if (isCheckPositive) {
+      expenseCtx.updateExpense(checkID, {
+        // currently it's dummy
+        description: "The Other Test",
+        amount: 59.99,
+        date: new Date("2023-08-12"),
+      });
+      // yoksa eğer bu bir ekleme girişimi
+    } else {
+      expenseCtx.addExpense({
+        // currently it's dummy
+        description: "Test",
+        amount: 29.99,
+        date: new Date("2023-08-11"),
+      });
+    }
   }
 
   return (
