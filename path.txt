@@ -9,4 +9,6 @@
 9) ilk marşı verdiğimize göre, styling i biraz daha detaylandırabiliriz
 10) components içerisindeki item'ları oluştururuz. gerekli object destructring'leri sağlarız ve styling'i yaparız (FlatList itemları Pressable olarak ayrı comp. örneğin)
 11) tarihi yönetmek için util/date.js içerisinde fonksiyonu oluşturduk
-12) Muhtelif içerik eklemeleri devam
+12) Muhtelif içerik eklemeleri, style düzenlemeleri ve içeriği component'lere bölerek düzenlemeye devam
+13) İşlevsellik belirli bir boyuta ulaştığı için "dummy_data (test verisi)"ni context olarak app-wide sunmaya başladık (expenses-context.js)
+14) 

@@ -57,7 +57,7 @@ const SANAL_VERI_YIGINI = [
   },
 ];
 
-export default function ExpensesOutput({ harcamalar, expensePeriyodu }) {
+export default function ExpensesOutput({ expensePeriyodu }) {
   return (
     <View style={styles.container}>
       <ExpensesSummary

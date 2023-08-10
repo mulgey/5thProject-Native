@@ -72,14 +72,26 @@ export default function App() {
     <>
       <StatusBar style="light" />
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator
+          // ExpensesOverview için "headerShown: false" yapmıştık
+          // dolayısıyla burada yaptığımız düzenlemelerin hepsi "ManageExpenses" için çalışacak
+          screenOptions={{
+            headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+            headerTintColor: "white",
+          }}
+        >
           {/* ExpensesOverview, bottomTabs gruplandırması için oluşturduğumuz komponent fonksiyonu */}
           <Stack.Screen
             name="ExpensesOverview"
             component={ExpensesOverview}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="ManageExpenses" component={ManageExpenseScreen} />
+          <Stack.Screen
+            name="ManageExpenses"
+            component={ManageExpenseScreen}
+            // modal is a cool component which you can drag-down to close
+            options={{ presentation: "modal" }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </>

@@ -5,13 +5,20 @@ import { useNavigation } from "@react-navigation/native";
 import { GlobalStyles } from "../../constants/styles";
 import { tarihiFormatla } from "../../utilities/date";
 
-export default function ExpenseItem({ description, date, amount }) {
+// ExpensesOutput.js'ten harcamalar={SANAL_VERI_YIGINI} olarak ExpensesList.js'e göndermiştik
+// ExpensesList.js içerisinde FlatList renderItem'a {...harcamaOgesi.item} olarak loop'layıp veriyi saçmıştık
+// .item ile saçtığımız bütün parametreleri aşağıda "prop" olarak toparladık
+export default function ExpenseItem({ id, description, date, amount }) {
   // bu sayfa birden fazla screen'de kullanılıyor
   // o yüzden screen'den buraya paslamak yerine navigation'ı kendimiz import'ladık direkt
   const navigation = useNavigation();
 
   function expensePressFunction() {
-    navigation.navigate("ManageExpenses");
+    // sayfaya yönlendirirken, ExpensesList.js içerisinde renderItem'da loop'layarak elde ettiğimiz ID'yi 2.parametrede veri olarak pasladık
+    navigation.navigate("ManageExpenses", {
+      // route parameter ayarlamış olduk
+      harcamaIDsi: id,
+    });
   }
 
   return (
