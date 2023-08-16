@@ -14,3 +14,4 @@
 14) context'i tamamladıktan sonra app-wide olarak sunup işlevlerini (tuşlara) tanımladık
 15) user input'ların tanımlanmasını yaptık
 16) data validation'ları tamamladık
+17) validation sonrası hata yönetimi için style değişikliklerini tamamladık
