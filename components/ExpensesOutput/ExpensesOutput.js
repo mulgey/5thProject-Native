@@ -15,7 +15,7 @@ export default function ExpensesOutput({
   // içerik olmayacakmış gibi text'imizi hazırlayalım
   let icerik = <Text style={styles.infoText}>{fallBackText}</Text>;
 
-  // eğer gösterecek bir içerik var ise list comp. miz çalışsın
+  // eğer gösterecek bir içerik var ise list comp. çalışsın
   if (harcamalar.length > 0) {
     icerik = <ExpensesList harcamalar={harcamalar} />;
   }

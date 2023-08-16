@@ -6,8 +6,8 @@ import { ExpensesContext } from "../store/expenses-context";
 
 // components & constants
 import IconButton from "../components/UserInterface/IconButton";
-import Button from "../components/UserInterface/Button";
 import { GlobalStyles } from "../constants/styles";
+import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 
 // screen içerinde default olan "route" ve "navigation"ı kullandık
 export default function ManageExpenseScreen({ route, navigation }) {
@@ -20,6 +20,12 @@ export default function ManageExpenseScreen({ route, navigation }) {
   const checkID = route.params?.harcamaIDsi;
   // bu değeri boolean'a çevirelim, var mı yok mu, true or false?
   const isCheckPositive = !!checkID;
+
+  // üzerine dokunduğumuz masrafın hangisi olduğunu bir bulalım
+  // sonra prop olarak ExpenseForm içerisine yollayalım
+  const seciliMasraf = expenseCtx.expenses.find(
+    (herBirTekilMasraf) => herBirTekilMasraf.id === checkID
+  );
 
   // "useLayoutEffect", DOM güncellemeleri tamamlanmadan önce çalışır ve kullanıcıya daha hızlı geri bildirim sağlar
   // DOM güncellemesi gerekmeyen bir şeyi güncelliyorsanız, o zaman "useEffect" kullanabilirsiniz. Bu, uygulama performansını artırabilir.
@@ -40,38 +46,26 @@ export default function ManageExpenseScreen({ route, navigation }) {
     navigation.goBack();
   }
 
-  function guncelleEkleFonksiyonu() {
+  function guncelleEkleFonksiyonu(gelenVeri) {
     // first it should be closed
     navigation.goBack();
     // id var mı? varsa bu bir update girişimi
     if (isCheckPositive) {
-      expenseCtx.updateExpense(checkID, {
-        // currently it's dummy
-        description: "The Other Test",
-        amount: 59.99,
-        date: new Date("2023-08-12"),
-      });
+      expenseCtx.updateExpense(checkID, gelenVeri);
       // yoksa eğer bu bir ekleme girişimi
     } else {
-      expenseCtx.addExpense({
-        // currently it's dummy
-        description: "Test",
-        amount: 29.99,
-        date: new Date("2023-08-11"),
-      });
+      expenseCtx.addExpense(gelenVeri);
     }
   }
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonsGroup}>
-        <Button style={styles.button} mode="flat" onPress={cancelFonksiyonu}>
-          Iptal Et
-        </Button>
-        <Button style={styles.button} onPress={guncelleEkleFonksiyonu}>
-          {isCheckPositive ? "Guncelle" : "Ekle"}
-        </Button>
-      </View>
+      <ExpenseForm
+        cancelFonksiyonu={cancelFonksiyonu}
+        guncelleEkleFonksiyonu={guncelleEkleFonksiyonu}
+        guncelleVeyaEkleText={isCheckPositive ? "Guncelle" : "Ekle"}
+        seciliMasraf={seciliMasraf}
+      />
       {isCheckPositive && (
         <View style={styles.deleteContainer}>
           <IconButton
@@ -97,16 +91,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     borderTopWidth: 2,
     borderTopColor: GlobalStyles.colors.primary200,
-    alignItems: "center",
-  },
-  // button style'ını prop olarak "button" component'inin içerisine gönderdik
-  button: {
-    minWidth: 120,
-    marginHorizontal: 8,
-  },
-  buttonsGroup: {
-    flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
   },
 });

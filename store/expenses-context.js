@@ -36,19 +36,19 @@ const SANAL_VERI_YIGINI = [
     id: "e6",
     description: "A new laptop",
     amount: 1059.5,
-    date: new Date("2023-08-06"),
+    date: new Date("2023-08-10"),
   },
   {
     id: "e7",
     description: "Gift for the boyz",
     amount: 120.554,
-    date: new Date("2023-08-07"),
+    date: new Date("2023-08-12"),
   },
   {
     id: "e8",
     description: "Ring for my wife",
     amount: 1220.5,
-    date: new Date("2023-08-10"),
+    date: new Date("2023-08-14"),
   },
 ];
 
