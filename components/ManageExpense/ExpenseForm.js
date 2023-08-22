@@ -119,7 +119,7 @@ export default function ExpenseForm({
 
   return (
     <View style={styles.form}>
-      <Text style={styles.title}>Yeni Masraf</Text>
+      <Text style={styles.title}>Harcama Kaydı</Text>
       <View style={styles.inputsRow}>
         {/* prop'ları object olarak textInputConfig içerisinde göndermek konfor sağlar */}
         {/* istediğimiz miktarda özelliği ekleyebiliyoruz */}

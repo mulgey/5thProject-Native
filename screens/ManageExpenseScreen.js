@@ -4,10 +4,11 @@ import { View, StyleSheet } from "react-native";
 // context provider
 import { ExpensesContext } from "../store/expenses-context";
 
-// components & constants
+// components & constants & utilities
 import IconButton from "../components/UserInterface/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
+import { masrafDepola } from "../utilities/http";
 
 // screen içerinde default olan "route" ve "navigation"ı kullandık
 export default function ManageExpenseScreen({ route, navigation }) {
@@ -54,6 +55,7 @@ export default function ManageExpenseScreen({ route, navigation }) {
       expenseCtx.updateExpense(checkID, gelenVeri);
       // yoksa eğer bu bir ekleme girişimi
     } else {
+      masrafDepola(gelenVeri);
       expenseCtx.addExpense(gelenVeri);
     }
   }

@@ -1,6 +1,7 @@
 import { createContext, useReducer } from "react";
 
 // the-initial data
+/*
 const SANAL_VERI_YIGINI = [
   {
     id: "e1",
@@ -16,7 +17,7 @@ const SANAL_VERI_YIGINI = [
   },
   {
     id: "e3",
-    description: "A new book",
+    description: "New book",
     amount: 12.99,
     date: new Date("2021-12-01"),
   },
@@ -28,29 +29,30 @@ const SANAL_VERI_YIGINI = [
   },
   {
     id: "e5",
-    description: "A new keyboard",
+    description: "Game set",
     amount: 29.99,
     date: new Date("2022-02-18"),
   },
   {
     id: "e6",
-    description: "A new laptop",
+    description: "New laptop",
     amount: 1059.5,
-    date: new Date("2023-08-10"),
+    date: new Date("2023-08-12"),
   },
   {
     id: "e7",
-    description: "Gift for the boyz",
+    description: "Gift for the boys",
     amount: 120.554,
     date: new Date("2023-08-12"),
   },
   {
     id: "e8",
-    description: "Ring for my wife",
-    amount: 1220.5,
+    description: "Registration Fee",
+    amount: 520.5,
     date: new Date("2023-08-14"),
   },
 ];
+*/
 
 // diğer sayfalar içerisinde bu const u çağıracağız useContext için
 // initial values below help for the auto-complation later
@@ -58,12 +60,13 @@ export const ExpensesContext = createContext({
   expenses: [],
   // gerekli parametreleri object destructring için sunduk
   addExpense: ({ description, amount, date }) => {},
+  setExpenses: (expenses) => {},
   updateExpense: (id, { description, amount, date }) => {},
   // 2-parameter here, id and the object containing those values
   deleteExpense: (id) => {},
 });
 
-// state, aşağıdaki "SANAL_VERI_YIGINI"nı alır
+// state, aşağıdaki "SANAL_VERI_YIGINI"nı alır(dı)
 function expensesReducer(state, action) {
   switch (action.type) {
     case "ADD":
@@ -71,6 +74,9 @@ function expensesReducer(state, action) {
       const id = new Date().toString() + Math.random().toString();
       // bring the new items in its object, add the random ID and then spread the existing items
       return [{ ...action.payload, id: id }, ...state];
+    case "SET":
+      // bu aksiyonda sadece bizim için "array of expenses"i getirmesini bekliyoruz
+      return action.payload;
     case "UPDATE":
       // öncelikle güncelleyeceğimiz öğenin indeksini bulalım
       const indexNumber = state.findIndex(
@@ -105,16 +111,17 @@ function expensesReducer(state, action) {
 // actual provider with the actual logic
 function ExpensesContextSaglayici({ children }) {
   // parantez içerisi şu şekilde ((1) yukarıdaki iş yapar fonksiyonumuz, (2) başlangıç verilerimiz)
-  const [expensesState, dispatch] = useReducer(
-    expensesReducer,
-    SANAL_VERI_YIGINI
-  );
+  const [expensesState, dispatch] = useReducer(expensesReducer, []);
 
   function addExpense(expenseVerisi) {
     // burdaki "type", yukarıdaki "action.type"dan geliyor
     // "expenseVerisi" bir object olarak dönecektir
     // payload, eylemin taşıdığı veriyi temsil eder
     dispatch({ type: "ADD", payload: expenseVerisi });
+  }
+
+  function setExpenses(expenseVerisi) {
+    dispatch({ type: "SET", payload: expenseVerisi });
   }
 
   function updateExpense(id, expenseVerisi) {
@@ -134,6 +141,7 @@ function ExpensesContextSaglayici({ children }) {
     expenses: expensesState,
     // diğerleri de initial value başlıkları
     addExpense: addExpense,
+    setExpenses: setExpenses,
     // içerikteki fonksiyonlar, ExpensesContextSaglayici fonk. içerisindeki fonksiyonlar
     updateExpense: updateExpense,
     deleteExpense: deleteExpense,

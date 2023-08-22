@@ -15,3 +15,7 @@
 15) user input'ların tanımlanmasını yaptık
 16) data validation'ları tamamladık
 17) validation sonrası hata yönetimi için style değişikliklerini tamamladık
+
+18) google firebase'den real-time-database kurduk
+19) request'leri gönderebilmek için Axios'u kurduk (npm install axios)
+20) veri ekleme mekanizmasını kurduk ve test ettik
