@@ -102,9 +102,11 @@ export default function ExpenseForm({
           },
         };
       });
-      // return, yani burada dursun aşağısı çalışmasın
+      // hata tespit ettiysek (yukarıdaki if) girdilerAksiyonu() aldıktan sonra burada return
+      // yani burada dursun aşağısı çalışmasın
       return;
     }
+    // Validation Ends
 
     // ManageExpenseScreen içerisindeki fonksiyonda context üzerinden veriyi değiştirmek için bu fonk. kullandık
     // "isCheckPositive" durumuna göre "expenseCtx.updateExpense(checkID, gelenVeri)" veya "expenseCtx.addExpense(gelenVeri)"

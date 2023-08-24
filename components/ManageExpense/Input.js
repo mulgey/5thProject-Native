@@ -19,6 +19,7 @@ export default function Input({ label, extraStyle, textInputConfig, invalid }) {
 
   return (
     <View style={[styles.inputContainer, extraStyle]}>
+      {/* invalid ise yukarıda "invalidInput"u halletmiştik, burada "invalidLabel"ı hallettik */}
       <Text style={[styles.label, invalid && styles.invalidLabel]}>
         {label}
       </Text>

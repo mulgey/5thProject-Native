@@ -1,5 +1,5 @@
 import { View, StyleSheet } from "react-native";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 // context provider
 import { ExpensesContext } from "../store/expenses-context";
@@ -8,28 +8,55 @@ import { ExpensesContext } from "../store/expenses-context";
 import ExpensesOutput from "../components/ExpensesOutput/ExpensesOutput";
 import { belirliGunOncesininTarihi } from "../utilities/date";
 import { masrafFetchle } from "../utilities/http";
+import LoadingSpinner from "../components/UserInterface/LoadingSpinner";
+import ErrorHandling from "../components/UserInterface/ErrorHandling";
 
 export default function RecentExpensesScreen() {
+  // loading-spinner için state kullanmaya karar verdik. başlangıçta "yükleniyor": true
+  const [sayfaYukleniyor, yukleniyorAksiyonu] = useState(true);
+
+  // hata-yönetimi için state kullanmaya karar verdik. undefined başlayalım
+  const [hata, hataAksiyonu] = useState();
+
   // app-wide context'imizi tanıtalım. createContext içerisine yazdığımız ismi yazmalıyız
   const expensesCtx = useContext(ExpensesContext);
-
-  // bunu kullanmıyoruz çünkü ekledikten sonra sayfa güncellenmiyor (A01)
-  // const [fetchlenenMasraflar, fetchAksiyonu] = useState([]);
 
   // component ler re-render'landığında bazı kodların execute lanmasını sağlar
   useEffect(() => {
     // useEffect içerisinde direkt async olamayacağı için önce async olan bir fonksiyon tanımlıyoruz
     async function masraflariSirasiylaAl() {
-      const masraflar = await masrafFetchle();
-      // bunu kullanmıyoruz çünkü ekledikten sonra sayfa güncellenmiyor (A01)
-      // fetchAksiyonu(masraflar);
-      // context içerisindeki SET aksiyonu, bize "güncel veri seti"ni getiriyor
-      expensesCtx.setExpenses(masraflar);
+      // süreç başlamadan yükleniyor durumunu "true" belirleyelim
+      yukleniyorAksiyonu(true);
+      // hata yönetimini başlatalım. "try"ladığımız şu kod süreci için hata "catch"leyelim
+      try {
+        const masraflar = await masrafFetchle();
+        // context içerisindeki SET aksiyonu, bize "güncel veri seti"ni getiriyor
+        expensesCtx.setExpenses(masraflar);
+      } catch (err) {
+        hataAksiyonu(`Masrafları çekemedim. Hata mesajı: ${err}`);
+      }
+      // yükleme süreci bittikten sonra yükleniyor durumunu "false"luyoruz
+      yukleniyorAksiyonu(false);
     }
-
-    // sonra bu async fonksiyonu çağırıyoruz
+    // sonra yukarıda tanımladığımız bu async fonksiyonu çağırıyoruz
     masraflariSirasiylaAl();
   }, []);
+
+  // ErrorHandling içerisindeki button için fonk. tanımlayalım
+  function hataFonksiyonu() {
+    // hata sürecini sıfırlayalım
+    hataAksiyonu(null);
+  }
+
+  // hata varsa ve sayfa yüklemesi söz konusu değil ise
+  if (hata && !sayfaYukleniyor) {
+    return <ErrorHandling hataMesajı={hata} onay={hataFonksiyonu} />;
+  }
+
+  // yükleme devam ediyorsa Loading sayfasını gösterelim
+  if (sayfaYukleniyor) {
+    return <LoadingSpinner />;
+  }
 
   // context içerisindeki "expenses", mevcut veriyi array olarak içerir
   // yakın tarihteki masrafları bulmak için filtreleyelim

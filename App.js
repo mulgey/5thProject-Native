@@ -45,7 +45,7 @@ function ExpensesOverview() {
         name="RecentExpenses"
         component={RecentExpensesScreen}
         options={{
-          title: "Güncel Harcamalar",
+          title: "Recent Expenses",
           tabBarLabel: "Güncel",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="hourglass" size={size} color={color} />

@@ -70,16 +70,24 @@ export const ExpensesContext = createContext({
 function expensesReducer(state, action) {
   switch (action.type) {
     case "ADD":
+      // başlangıçta ID'yi bu şekilde hallediyorduk ve aşağıdaki return şunu içeriyordu:
+      // return [{ ...action.payload, id: id }, ...state];
       // let's create a random unique ID for this small project
-      const id = new Date().toString() + Math.random().toString();
-      // bring the new items in its object, add the random ID and then spread the existing items
-      return [{ ...action.payload, id: id }, ...state];
+      // const id = new Date().toString() + Math.random().toString();
+
+      // bring the new item including its unique ID genereted by the firebase, and then spread the existing items
+      // bu şekilde yeniyi en başa eklemiş oluyoruz. ama firebase'de en sona ekliyor
+      // ilk eklediğimizde en başta, sayfa reload'dan sonra en sonda gözüküyor
+      return [action.payload, ...state];
     case "SET":
+      // öncelikle firebase'deki sırayı terse çevirelim. çünkü orada yeni olan en aşağıda
+      const tersDuz = action.payload.reverse();
       // bu aksiyonda sadece bizim için "array of expenses"i getirmesini bekliyoruz
-      return action.payload;
+      return tersDuz;
     case "UPDATE":
       // öncelikle güncelleyeceğimiz öğenin indeksini bulalım
       const indexNumber = state.findIndex(
+        // object olan "action.payload" içerisindeki "id"ye ulaştık
         (herBirItem) => herBirItem.id === action.payload.id
       );
 
@@ -91,6 +99,7 @@ function expensesReducer(state, action) {
         // güncelleyeceğimiz öğeyi getir
         ...guncellenecekExpense,
         // action.payload'dakileri üstüne yaz. "veri" -> aşağıdaki "expenseVerisi"ni işaret eder
+        // bu örnekte "action.payload" bir object olduğu için, içindeki parametreye ulaştık
         // "expenseVerisi" -> yukarıdaki "{ description, amount, date }" nesnesini işaret eder
         ...action.payload.veri,
       };

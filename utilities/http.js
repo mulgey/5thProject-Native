@@ -4,10 +4,18 @@ import axios from "axios";
 const firebaseURL =
   "https://react-native-stage10-default-rtdb.europe-west1.firebasedatabase.app/";
 
-export function masrafDepola(masrafVerisi) {
+export async function masrafDepola(masrafVerisi) {
   // ilk parametre, firestore'daki başlık URL'idir. sonuna "expenses.json" ekledik
   // ikinci parametre, gönderilecek değerdir. unique ID göndermeyiz, kendisi otomatik halleder
-  axios.post(firebaseURL + "expenses.json", masrafVerisi);
+  const response = await axios.post(
+    firebaseURL + "expenses.json",
+    masrafVerisi
+  );
+  // firebase rajonunda ID'yi verecek olan yaklaşım ".data.name" olur
+  const ID = response.data.name;
+  // fonksiyonumuz async olduğu için returns a promise: ID
+  // bu kısmı async yaptığımız için ManageExpenseScreen içerisindeki "guncelleEkleFonksiyonu" da bir promise return leyeceğinden dolayı async oldu
+  return ID;
 }
 
 export async function masrafFetchle() {
@@ -36,4 +44,13 @@ export async function masrafFetchle() {
   }
   // hazırladığımız seti loop bittikten sonra artık sunabiliriz
   return masraflarDolabi;
+}
+
+export function masrafUpdatele(id, masrafVerisi) {
+  // "expenses.json" dan farklı bir URL kullandık. ikinci kısım güncellenecek veriyi içerir (id içermez)
+  return axios.put(firebaseURL + `expenses/${id}.json`, masrafVerisi);
+}
+
+export function masrafaDeletele(id) {
+  return axios.delete(firebaseURL + `expenses/${id}.json`);
 }

@@ -19,3 +19,6 @@
 18) google firebase'den real-time-database kurduk
 19) request'leri gönderebilmek için Axios'u kurduk (npm install axios)
 20) veri ekleme mekanizmasını kurduk ve test ettik
+21) veri ekleme, düzenleme ve silmeye dair bütün altyapıyı kurduk. backend'i ayarlarken context'i anlık güncellemelerde kullanabilmek amacıyla iptal etmedik
+22) loading spinner detayını ekledik
+23) hata yönetimine dair detayları ekledik

@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 
 // context provider
@@ -8,24 +8,37 @@ import { ExpensesContext } from "../store/expenses-context";
 import IconButton from "../components/UserInterface/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
-import { masrafDepola } from "../utilities/http";
+import LoadingSpinner from "../components/UserInterface/LoadingSpinner";
+import ErrorHandling from "../components/UserInterface/ErrorHandling";
+import {
+  masrafDepola,
+  masrafUpdatele,
+  masrafaDeletele,
+} from "../utilities/http";
 
 // screen içerinde default olan "route" ve "navigation"ı kullandık
 export default function ManageExpenseScreen({ route, navigation }) {
+  // loading-spinner için state kullanmaya karar verdik
+  // başlangıçta kullanıcıdan bilgi aldığımız için "false" geçtik
+  const [sayfaYukleniyor, yukleniyorAksiyonu] = useState(false);
+
+  // hata-yönetimi için state kullanmaya karar verdik. undefined başlayalım
+  const [hata, hataAksiyonu] = useState();
+
   // context üzerinden verilere ulaşalım. createContext'teki ismi kullanmalıyız
   const expenseCtx = useContext(ExpensesContext);
 
   // parameter extract'leme zamanı. Soru işareti ekledik çünkü
   // route.params ya da harcamaIDsi özelliği yoksa, kod hata vermez, sadece editedID değişkeni undefined olur.
   // "harcamaIDsi" ExpenseItem.js'ten buraya navigate'lenirken içerik olarak paslandı
-  const checkID = route.params?.harcamaIDsi;
+  const whatsMyID = route.params?.harcamaIDsi;
   // bu değeri boolean'a çevirelim, var mı yok mu, true or false?
-  const isCheckPositive = !!checkID;
+  const isCheckPositive = !!whatsMyID;
 
   // üzerine dokunduğumuz masrafın hangisi olduğunu bir bulalım
   // sonra prop olarak ExpenseForm içerisine yollayalım
   const seciliMasraf = expenseCtx.expenses.find(
-    (herBirTekilMasraf) => herBirTekilMasraf.id === checkID
+    (herBirTekilMasraf) => herBirTekilMasraf.id === whatsMyID
   );
 
   // "useLayoutEffect", DOM güncellemeleri tamamlanmadan önce çalışır ve kullanıcıya daha hızlı geri bildirim sağlar
@@ -36,28 +49,76 @@ export default function ManageExpenseScreen({ route, navigation }) {
     });
   }, [navigation, isCheckPositive]);
 
-  function trashPressFonksiyonu() {
-    // first it should be closed
-    navigation.goBack();
-    expenseCtx.deleteExpense(checkID);
+  async function trashPressFonksiyonu() {
+    // loading spinner'ı aktive edebiliriz
+    yukleniyorAksiyonu(true);
+    // hata yönetimini başlatalım. "try"ladığımız şu kod süreci için hata "catch"leyelim
+    try {
+      expenseCtx.deleteExpense(whatsMyID);
+      // await eklememizin tek sebebi pencereyi kapattığımız fonksiyonun en son çalışması
+      await masrafaDeletele(whatsMyID);
+      // lastly it should be closed
+      navigation.goBack();
+    } catch (err) {
+      hataAksiyonu(
+        `Silme işlemi tamamlanmadı. Lütfen tekrar deneyin. Hata mesajı: ${err}`
+      );
+      // bu örnekte bu sayfada kaldığımız için loading spinner ın gözükmesini istemiyoruz
+      yukleniyorAksiyonu(false);
+    }
   }
 
   function cancelFonksiyonu() {
-    // first it should be closed
     navigation.goBack();
   }
 
-  function guncelleEkleFonksiyonu(gelenVeri) {
-    // first it should be closed
-    navigation.goBack();
-    // id var mı? varsa bu bir update girişimi
-    if (isCheckPositive) {
-      expenseCtx.updateExpense(checkID, gelenVeri);
-      // yoksa eğer bu bir ekleme girişimi
-    } else {
-      masrafDepola(gelenVeri);
-      expenseCtx.addExpense(gelenVeri);
+  async function guncelleEkleFonksiyonu(gelenVeri) {
+    // loading spinner'ı aktive edebiliriz
+    // bunu deaktive etmeye gerek duymadık çünkü sürecin sonunda modal sayfayı kapatıyoruz
+    yukleniyorAksiyonu(true);
+    // hata yönetimini başlatalım. "try"ladığımız şu kod süreci için hata "catch"leyelim
+    try {
+      // id var mı? varsa bu bir update girişimi
+      if (isCheckPositive) {
+        // burada update yaparken, local ve backend için sıra önemli değil
+        // first, do it locally
+        expenseCtx.updateExpense(whatsMyID, gelenVeri);
+        // secondly, do it in firebase backend
+        // await eklememizin tek sebebi en aşağıda pencereyi kapattığımız fonksiyonun en son çalışması
+        await masrafUpdatele(whatsMyID, gelenVeri);
+        // yoksa eğer bu bir ekleme girişimi
+      } else {
+        // burada ekleme yaparken, backend ve local sırası öenmli. çünkü önce backend'den ID'yi almalıyız
+        // http.js içerisinde bu fonksiyonu promise return leyecek şekilde async yaptığımız için burada sürdürüyoruz
+        // promise sonucunu fonksiyonda return'lediğimiz üzere store'luyoruz
+        const ID = await masrafDepola(gelenVeri);
+        // yeni masraf eklerken store'ladığımız bu ID'yi aynı zamanda context içerisine ekliyoruz
+        expenseCtx.addExpense({ ...gelenVeri, id: ID });
+      }
+      // then it should be closed
+      navigation.goBack();
+    } catch (err) {
+      hataAksiyonu(
+        `Veriyi kaydedemedim. Lütfen tekrar deneyin. Hata mesajı: ${err}`
+      );
+      // bu örnekte bu sayfada kaldığımız için loading spinner ın gözükmesini istemiyoruz
+      yukleniyorAksiyonu(false);
     }
+  }
+
+  // ErrorHandling içerisindeki button için fonk. tanımlayalım
+  function hataFonksiyonu() {
+    // hata sürecini sıfırlayalım
+    hataAksiyonu(null);
+  }
+
+  // hata varsa ve sayfa yüklemesi söz konusu değil ise
+  if (hata && !sayfaYukleniyor) {
+    return <ErrorHandling hataMesajı={hata} onay={hataFonksiyonu} />;
+  }
+
+  if (sayfaYukleniyor) {
+    return <LoadingSpinner />;
   }
 
   return (
